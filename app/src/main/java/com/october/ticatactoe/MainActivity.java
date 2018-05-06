@@ -1,5 +1,9 @@
 package com.october.ticatactoe;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Build;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean TRN_Owner;
     private boolean figure;
     Button chngdbtn;
+    Toast toast;
 
     private void switchFigure(){
 
@@ -32,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showTag(View view){
-        Toast toast = Toast.makeText(getApplicationContext(),"test " + view.getTag(),Toast.LENGTH_SHORT);
+        toast = Toast.makeText(getApplicationContext(),"test " + view.getTag(),Toast.LENGTH_SHORT);
         toast.show();
 
     }
@@ -57,14 +62,74 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void showMessage(String msg){
+        toast = Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
+    public void startApp(){
+
+    }
+
+    public void endGame(String player){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle(player + " have won, restart?");
+        alertDialogBuilder
+                //.setMessage("Click yes to exit!")
+                .setCancelable(false)
+                .setPositiveButton("Yes",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                startActivity(new Intent(MainActivity.this,MainActivity.class));
+                                finish();
+                            }
+                        })
+
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
     public void Pressed(View view){
 
         updateUI(view);
         if(player1.ifWinCombo())
-            showTag(view);
+            endGame("Player 1 (X)");
         if(player2.ifWinCombo())
-            showTag(view);
+            endGame("Player 2 (0)");
+    }
 
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Exit Game?");
+        alertDialogBuilder
+                .setMessage("Click yes to exit!")
+                .setCancelable(false)
+                .setPositiveButton("Yes",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                moveTaskToBack(true);
+                                android.os.Process.killProcess(android.os.Process.myPid());
+                                System.exit(1);
+                            }
+                        })
+
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
 }
