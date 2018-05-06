@@ -2,10 +2,12 @@ package com.october.ticatactoe;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -19,6 +21,23 @@ public class MainActivity extends AppCompatActivity {
     private boolean figure;
     Button chngdbtn;
     Toast toast;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater=getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.restart:
+                restartApp();
+                break;
+        }
+        return true;
+    }
 
     private void switchFigure(){
 
@@ -67,8 +86,9 @@ public class MainActivity extends AppCompatActivity {
         toast.show();
     }
 
-    public void startApp(){
-
+    public void restartApp(){
+        startActivity(new Intent(MainActivity.this,MainActivity.class));
+        finish();
     }
 
     public void endGame(String player){
@@ -80,8 +100,7 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("Yes",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                startActivity(new Intent(MainActivity.this,MainActivity.class));
-                                finish();
+                                restartApp();
                             }
                         })
 
